@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "HelloFresh Click-to-Call",
+  "version": "1.0.0",
+  "description": "Bel telefoonnummers via je Yealink-telefoon.",
+
+  "permissions": [
+    "storage",
+    "clipboardRead"
+  ],
+
+  "host_permissions": [
+    "http://10.50.24.236/*"
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "HelloFresh Click-to-Call"
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+
+  "omnibox": {
+    "keyword": "call"
+  }
+}

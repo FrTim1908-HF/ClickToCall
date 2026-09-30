@@ -28,8 +28,8 @@ async function call(){
 		http = 'http://'
 	}
 	baseUrl = http + link +'/servlet?number=' + phonenumber;
-	const username = 'user';
-	const password = 'user';
+	const username = 'admin';
+	const password = 'admin';
 	const headers = new Headers({
         	'Authorization': 'Basic ' + btoa(username + ':' + password) // Encode credentials
     	});
