@@ -19,14 +19,10 @@ async function call(){
 	if(phonenumber.startsWith("+")){
 	phonenumber = phonenumber.slice(1)
 	}
-	http = ''
 
-	if(link == "10.50.103.234"){
-		http = 'https://'
-	}
-	else {
-		http = 'http://'
-	}
+
+	let http = 'http://'
+
 	baseUrl = http + link +'/servlet?number=' + phonenumber;
 	const username = 'admin';
 	const password = 'admin';
