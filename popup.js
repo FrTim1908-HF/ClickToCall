@@ -1,7 +1,6 @@
 var phonenumber = ""
 var link = ""
-chrome.storage.sync.get(["link"])
-	.then((result) => {
+chrome.storage.local.get(["link"], (result) => {
   		link = result.link
 		
 	});
@@ -21,13 +20,14 @@ async function call(){
 	}
 	http = ''
 
-	if(link == "10.50.103.234"){
-		http = 'https://'
-	}
-	else {
-		http = 'http://'
-	}
+	// if(link == "10.50.103.234"){
+	// 	http = 'https://'
+	// }
+	// else {
+	http = 'http://'
+	// }
 	baseUrl = http + link +'/servlet?number=' + phonenumber;
+	console.log(baseUrl)
 	const username = 'admin';
 	const password = 'admin';
 	const headers = new Headers({
