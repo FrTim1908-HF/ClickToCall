@@ -1,7 +1,6 @@
 var phonenumber = ""
 var link = ""
-chrome.storage.sync.get(["link"])
-	.then((result) => {
+chrome.storage.local.get(["link"], (result) => {
   		link = result.link
 		
 	});
@@ -24,6 +23,7 @@ async function call(){
 	let http = 'http://'
 
 	baseUrl = http + link +'/servlet?number=' + phonenumber;
+	console.log(baseUrl)
 	const username = 'admin';
 	const password = 'admin';
 	const headers = new Headers({

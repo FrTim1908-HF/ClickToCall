@@ -1,4 +1,4 @@
-chrome.storage.sync.get(["link"])
+chrome.storage.local.get(["link"])
 	.then((result) => {
   		var link = result.link
 		document.getElementById(link).checked = true
@@ -6,8 +6,8 @@ chrome.storage.sync.get(["link"])
 
 const saveOptions = () => {
 	const link = document.querySelector('input[name="link"]:checked').value;
-	chrome.storage.sync.clear();
-	chrome.storage.sync.set(
+	chrome.storage.local.clear();
+	chrome.storage.local.set(
 	{"link": link},
 	() => {
 		const status = document.getElementById('status');
