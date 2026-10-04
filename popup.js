@@ -1,62 +1,55 @@
-var phonenumber = ""
-var link = ""
+var link = "";
 chrome.storage.local.get(["link"], (result) => {
-  		link = result.link
-		
-	});
+    link = result.link;
+});
 
 async function call(){
-	var phonenumber = "";
-	await navigator.clipboard.readText().then((text) => {
-	phonenumber = text;
-	console.log(text);
-	});
-	phonenumber = phonenumber.replace(/\s+/g, '');
-	console.log(phonenumber)
-	const status = document.getElementById('status');
-	status.textContent = 'Calling: ' + phonenumber;
-	if(phonenumber.startsWith("+")){
-	phonenumber = phonenumber.slice(1)
-	}
+    var phonenumber = "";
+    await navigator.clipboard.readText().then((text) => {
+        phonenumber = text;
+        console.log(text);
+    });
+    phonenumber = phonenumber.replace(/\s+/g, '');
+    
+    const status = document.getElementById('status');
+    status.textContent = 'Calling: ' + phonenumber;
+    
+    if(phonenumber.startsWith("+")){
+        phonenumber = phonenumber.slice(1);
+    }
 
+    const baseUrl = `http://${link}/servlet?number=${phonenumber}`;
 
-	let http = 'http://'
-
-	baseUrl = http + link +'/servlet?number=' + phonenumber;
-	console.log(baseUrl)
-	const username = 'admin';
-	const password = 'admin';
-	const headers = new Headers({
-        	'Authorization': 'Basic ' + btoa(username + ':' + password) // Encode credentials
-    	});
-
-    try {
-        const response = await fetch(baseUrl, { method: 'GET', headers });
-
-        if (response.status === 403) {
-            status.textContent = "Call failed: Access forbidden (403).";
-            console.error("Error 403: Forbidden");
-            return;
-        } else if (!response.ok) {
-            status.textContent = `Call failed: ${response.status} ${response.statusText}`;
-            console.error(`Error ${response.status}: ${response.statusText}`);
+    // Stuur de belfunctie door naar background.js
+    chrome.runtime.sendMessage({ action: "makeCall", url: baseUrl }, (response) => {
+        if (chrome.runtime.lastError) {
+            status.textContent = "Call failed: Extension error.";
             return;
         }
-
-        // Als geen fout, ga door met de daadwerkelijke oproep
-        document.location.href = baseUrl;
-    } catch (error) {
-        status.textContent = "Call failed: Network error.";
-        console.error("Network error:", error);
-    }
+        
+        if (response && response.success) {
+            status.textContent = "Bellen gestart!";
+        } else if (response && response.status === 403) {
+            status.textContent = "Call failed: Access forbidden (403).";
+        } else {
+            status.textContent = `Call failed: ${response?.statusText || "Network error"}`;
+        }
+    });
 }
+
 async function endCall(){
-	const url = http + 'user:user@'+link+'/servlet?key=X'
-	const status = document.getElementById('status');
-	status.textContent = 'Call cancelled..';
-	console.log(url)
-	document.location.href=url
-	}
+    const status = document.getElementById('status');
+    status.textContent = 'Call cancelled..';
+    
+    const cancelUrl = `http://${link}/servlet?key=X`;
+
+    // Stuur de ophangfunctie door naar background.js
+    chrome.runtime.sendMessage({ action: "cancelCall", url: cancelUrl }, (response) => {
+        if (!response || !response.success) {
+            console.error("Fout bij ophangen via achtergrond script.");
+        }
+    });
+}
 
 document.getElementById('call').addEventListener('click', call);
 document.getElementById('endCall').addEventListener('click', endCall);
