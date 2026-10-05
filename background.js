@@ -3,8 +3,8 @@ chrome.webRequest.onAuthRequired.addListener(
     function(details, callbackFn) {
         callbackFn({
             authCredentials: {
-                username: "admin", // Let op: controleer of je 'admin' of 'user' moet gebruiken
-                password: "admin"
+                username: "user", // Let op: controleer of je 'admin' of 'user' moet gebruiken
+                password: "user"
             }
         });
     },
